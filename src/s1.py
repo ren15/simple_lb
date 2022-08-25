@@ -19,6 +19,7 @@ def multi_threaded_client(connection):
         data = connection.recv(2048).decode()
         if not data:
             break
+        print(data)
         response = 'Server message: ' + str(int(data)+1)
         connection.sendall(str.encode(response))
     connection.close()
