@@ -21,4 +21,5 @@ jobs:
         run: |
           bash scripts/install_pkgs.sh
           eval "$(${HOME}/miniconda3/bin/conda shell.bash hook)"
+          python -m compileall .
 
