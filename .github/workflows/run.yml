@@ -17,9 +17,14 @@ jobs:
           free -h 
           df -h
 
-      - name: Setup
+      - name: Install pkgs
         run: |
           bash scripts/install_pkgs.sh
+
+      - name: Run
+        run: |
           eval "$(${HOME}/miniconda3/bin/conda shell.bash hook)"
           python -m compileall .
+          python src/s1.py & 
+          python src/c1.py
 
