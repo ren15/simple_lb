@@ -3,6 +3,7 @@ the client should be a ping-pong client
 
 """
 import socket
+import time
 
 
 def client_program():
@@ -19,6 +20,7 @@ def client_program():
         data = client_socket.recv(1024).decode()
 
         print('Received from server: ' + data)  # show in terminal
+        time.sleep(1)
 
     client_socket.close()  # close the connection
 
