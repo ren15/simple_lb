@@ -1,27 +1,33 @@
 import socket
+from _thread import start_new_thread
+
+ServerSideSocket = socket.socket()
+host = '127.0.0.1'
+port = 2004
+ThreadCount = 0
+try:
+    ServerSideSocket.bind((host, port))
+except socket.error as e:
+    print(str(e))
+print('Socket is listening..')
+ServerSideSocket.listen(5)
 
 
-def server_program():
-    host = socket.gethostname()
-    port = 5000
-
-    server_socket = socket.socket()
-    server_socket.bind((host, port))
-
-    server_socket.listen(2)
-    conn, address = server_socket.accept()
-    print("Connection from: " + str(address))
+def multi_threaded_client(connection):
+    connection.send(str.encode('Server is working:'))
     while True:
-        data = conn.recv(1024).decode()
+        data = connection.recv(2048).decode()
         if not data:
-            # if data is not received break
             break
-        print("from connected user: " + str(data))
-        data = "pong"
-        conn.send(data.encode())
-
-    conn.close()  # close the connection
+        response = 'Server message: ' + str(int(data)+1)
+        connection.sendall(str.encode(response))
+    connection.close()
 
 
-if __name__ == '__main__':
-    server_program()
+for i in range(100):
+    Client, address = ServerSideSocket.accept()
+    print('Connected to: ' + address[0] + ':' + str(address[1]))
+    start_new_thread(multi_threaded_client, (Client, ))
+    ThreadCount += 1
+    print('Thread Number: ' + str(ThreadCount))
+ServerSideSocket.close()

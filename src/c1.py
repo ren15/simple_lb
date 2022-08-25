@@ -1,29 +1,20 @@
-"""
-the client should be a ping-pong client
-
-"""
 import socket
 import time
 
+ClientMultiSocket = socket.socket()
+host = '127.0.0.1'
+port = 2004
+print('Waiting for connection response')
+try:
+    ClientMultiSocket.connect((host, port))
+except socket.error as e:
+    print(str(e))
 
-def client_program():
-    host = socket.gethostname()
-    port = 5000
-
-    client_socket = socket.socket()
-    client_socket.connect((host, port))
-
-    message = "ping"
-
-    for i in range(10):
-        client_socket.send(message.encode())
-        data = client_socket.recv(1024).decode()
-
-        print('Received from server: ' + data)  # show in terminal
-        time.sleep(1)
-
-    client_socket.close()  # close the connection
-
-
-if __name__ == '__main__':
-    client_program()
+res = ClientMultiSocket.recv(1024)
+for i in range(10):
+    Input = str(i)
+    ClientMultiSocket.send(str.encode(Input))
+    res = ClientMultiSocket.recv(1024)
+    print(res.decode('utf-8'))
+    time.sleep(1)
+ClientMultiSocket.close()
