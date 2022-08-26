@@ -1,6 +1,8 @@
 import socket
 from _thread import start_new_thread
 
+import sys
+
 g_num = 0
 
 
@@ -14,6 +16,7 @@ def multi_threaded_client(connection):
         global g_num
         g_num += 1
         print(g_num)
+        sys.stdout.flush()
         response = 'Server message: ' + str(int(data)+1)
         connection.sendall(str.encode(response))
     connection.close()
