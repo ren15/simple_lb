@@ -17,11 +17,6 @@ def getLogger(name):
     return logger
 
 
-logger = getLogger(__name__)
-
-g_num = 0
-
-
 def multi_threaded_client(connection):
     connection.send(str.encode('Server is working:'))
     while True:
@@ -34,12 +29,14 @@ def multi_threaded_client(connection):
         logger.info(f"g_num : {g_num}")
         sys.stdout.flush()
 
+        if g_num > 100:
+            break
+
         response = 'Server message: ' + str(int(data)+1)
         connection.sendall(str.encode(response))
 
-        if g_num > 100:
-            break
     connection.close()
+    logger.info("connection closed")
 
 
 def start_server_socket(host, port, max_clients):
@@ -50,15 +47,23 @@ def start_server_socket(host, port, max_clients):
         ServerSideSocket.bind((host, port))
     except socket.error as e:
         print(str(e))
-    print(f'Socket is listening at {host}:{port}')
+    logger.info(f'Socket is listening at {host}:{port}')
     ServerSideSocket.listen(max_clients)
 
     while True:
+        logger.info("Before accept")
+        # TODO: in new thread the socket did close
+        # but the main thread will still be waiting
         Client, address = ServerSideSocket.accept()
+        logger.info("After accept")
+
         logger.info('Connected to: ' + address[0] + ':' + str(address[1]))
+
         start_new_thread(multi_threaded_client, (Client, ))
         ThreadCount += 1
+
         logger.info('Thread Number: ' + str(ThreadCount))
+
         if g_num > 100:
             break
     ServerSideSocket.close()
@@ -66,5 +71,7 @@ def start_server_socket(host, port, max_clients):
 
 
 if __name__ == '__main__':
+    logger = getLogger(__name__)
+    g_num = 0
 
     start_server_socket(host='127.0.0.1', port=2004, max_clients=100)

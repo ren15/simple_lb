@@ -25,7 +25,7 @@ def start_client_socket(host, port):
         except:
             logger.info("Client connection failed, break from loop")
             break
-        time.sleep(0.5)
+        # time.sleep(0.5)
 
     ClientMultiSocket.close()
     logger.info("ClientSucceeded")
