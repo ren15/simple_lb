@@ -36,6 +36,9 @@ def multi_threaded_client(connection):
 
         response = 'Server message: ' + str(int(data)+1)
         connection.sendall(str.encode(response))
+
+        if g_num > 100:
+            break
     connection.close()
 
 
@@ -56,7 +59,10 @@ def start_server_socket(host, port, max_clients):
         start_new_thread(multi_threaded_client, (Client, ))
         ThreadCount += 1
         logger.info('Thread Number: ' + str(ThreadCount))
+        if g_num > 100:
+            break
     ServerSideSocket.close()
+    logger.info('Server Closed')
 
 
 if __name__ == '__main__':

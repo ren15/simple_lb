@@ -16,12 +16,17 @@ def start_client_socket():
     except socket.error as e:
         logger.error(str(e))
 
-    res = ClientMultiSocket.recv(1024)
-    for i in range(10):
+    _res = ClientMultiSocket.recv(1024)
+    i = 0
+    while True:
+        i += 1
         Input = str(i)
-        ClientMultiSocket.send(str.encode(Input))
-        _res = ClientMultiSocket.recv(1024)
-        time.sleep(0.5)
+        try:
+            ClientMultiSocket.send(str.encode(Input))
+            _res = ClientMultiSocket.recv(1024)
+        except:
+            break
+        # time.sleep(0.1)
     ClientMultiSocket.close()
     logger.info("ClientSucceeded")
 
