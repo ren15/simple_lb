@@ -27,6 +27,7 @@ jobs:
 
       - name: Check k3s
         run: |
+          sleep 30
           sudo kubectl get all -A
 
 
