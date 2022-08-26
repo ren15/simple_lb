@@ -8,4 +8,7 @@ python src/s1.py &
 sleep 0.5
 
 python src/c1.py &
+python src/c1.py &
 python src/c1.py
+
+sleep 5

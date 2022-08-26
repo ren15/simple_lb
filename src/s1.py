@@ -4,13 +4,20 @@ import sys
 import logging
 
 
-logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
-logger = logging.getLogger()
-streamHandler = logging.StreamHandler(sys.stdout)
-formatter = logging.Formatter(
-    '[%(asctime)s] - %(filename)s - %(message)s')
-streamHandler.setFormatter(formatter)
-logger.addHandler(streamHandler)
+def getLogger(name):
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    streamHandler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter(
+        '[%(asctime)s] - %(filename)s - %(message)s')
+    streamHandler.setFormatter(formatter)
+
+    logger.addHandler(streamHandler)
+    return logger
+
+
+logger = getLogger(__name__)
 
 g_num = 0
 
