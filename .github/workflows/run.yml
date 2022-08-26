@@ -21,9 +21,15 @@ jobs:
         run: |
           bash scripts/install_pkgs.sh
 
-      - name: Run
+      - name: Run1
         run: |
-          bash scripts/test.sh
+          bash scripts/test_1.sh
+          echo "3 clients"
+
+      - name: Run2
+        run: |
+          bash scripts/test_2.sh
+          echo "6 clients"
 
       - name: Check k3s
         run: |
