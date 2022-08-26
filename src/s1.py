@@ -15,7 +15,7 @@ def multi_threaded_client(connection):
         # print(data)
         global g_num
         g_num += 1
-        print(g_num)
+        print(f"g_num : {g_num}")
         sys.stdout.flush()
         response = 'Server message: ' + str(int(data)+1)
         connection.sendall(str.encode(response))
