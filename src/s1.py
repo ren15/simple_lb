@@ -1,7 +1,16 @@
 import socket
 from _thread import start_new_thread
-
 import sys
+import logging
+
+
+logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
+logger = logging.getLogger()
+streamHandler = logging.StreamHandler(sys.stdout)
+formatter = logging.Formatter(
+    '[%(asctime)s] - %(filename)s - %(message)s')
+streamHandler.setFormatter(formatter)
+logger.addHandler(streamHandler)
 
 g_num = 0
 
@@ -12,36 +21,37 @@ def multi_threaded_client(connection):
         data = connection.recv(2048).decode()
         if not data:
             break
-        # print(data)
         global g_num
         g_num += 1
-        print(f"g_num : {g_num}")
+
+        logger.info(f"g_num : {g_num}")
         sys.stdout.flush()
+
         response = 'Server message: ' + str(int(data)+1)
         connection.sendall(str.encode(response))
     connection.close()
 
 
-def start_server_socket():
+def start_server_socket(host, port, max_clients):
     ServerSideSocket = socket.socket()
-    host = '127.0.0.1'
-    port = 2004
+
     ThreadCount = 0
     try:
         ServerSideSocket.bind((host, port))
     except socket.error as e:
         print(str(e))
-    print('Socket is listening..')
-    ServerSideSocket.listen(5)
+    print(f'Socket is listening at {host}:{port}')
+    ServerSideSocket.listen(max_clients)
 
-    for i in range(100):
+    while True:
         Client, address = ServerSideSocket.accept()
-        print('Connected to: ' + address[0] + ':' + str(address[1]))
+        logger.info('Connected to: ' + address[0] + ':' + str(address[1]))
         start_new_thread(multi_threaded_client, (Client, ))
         ThreadCount += 1
-        print('Thread Number: ' + str(ThreadCount))
+        logger.info('Thread Number: ' + str(ThreadCount))
     ServerSideSocket.close()
 
 
 if __name__ == '__main__':
-    start_server_socket()
+
+    start_server_socket(host='127.0.0.1', port=2004, max_clients=100)
