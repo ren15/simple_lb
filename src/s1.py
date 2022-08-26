@@ -27,7 +27,8 @@ def multi_threaded_client(connection):
         global g_num
         g_num += 1
 
-        logger.info(f"g_num : {g_num}")
+        if g_num % 10 == 0:
+            logger.info(f"g_num : {g_num}")
         sys.stdout.flush()
 
         if g_num > 100:
