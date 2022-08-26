@@ -27,7 +27,8 @@ jobs:
 
       - name: Check k3s
         run: |
-          sleep 30
+          sudo ls /etc/rancher/k3s/k3s.yaml
+          sudo k3s kubectl get all -A
           sudo kubectl get all -A
 
 
