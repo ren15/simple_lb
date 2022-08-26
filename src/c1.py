@@ -23,6 +23,7 @@ def start_client_socket(host, port):
             ClientMultiSocket.send(str.encode(Input))
             _res = ClientMultiSocket.recv(1024)
         except:
+            logger.info("Client connection failed, break from loop")
             break
         time.sleep(0.5)
 
