@@ -25,4 +25,8 @@ jobs:
         run: |
           bash scripts/test.sh
 
+      - name: Check k3s
+        run: |
+          sudo kubectl get all -A
+
 

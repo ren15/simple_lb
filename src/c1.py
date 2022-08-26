@@ -5,11 +5,9 @@ import time
 logger = getLogger(__name__)
 
 
-def start_client_socket():
+def start_client_socket(host, port):
 
     ClientMultiSocket = socket.socket()
-    host = '127.0.0.1'
-    port = 2004
     logger.info('Waiting for connection response')
     try:
         ClientMultiSocket.connect((host, port))
@@ -26,10 +24,11 @@ def start_client_socket():
             _res = ClientMultiSocket.recv(1024)
         except:
             break
-        # time.sleep(0.1)
+        time.sleep(0.5)
+
     ClientMultiSocket.close()
     logger.info("ClientSucceeded")
 
 
 if __name__ == '__main__':
-    start_client_socket()
+    start_client_socket(host='127.0.0.1', port=2004)
