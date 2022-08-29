@@ -23,9 +23,9 @@ jobs:
 
       - name: Run
         run: |
-          bash scripts/test_1.sh
-          pkill -9 python
-          ls -elf | grep python
+          bash scripts/test.sh
+          sudo pkill -9 python
+          ps -elf | grep python
 
       - name: Check k3s
         run: |
