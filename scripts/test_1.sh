@@ -7,7 +7,7 @@ python -m compileall src
 
 # Start server
 python src/s1.py & 
-sleep 0.5
+sleep 2
 
 # Start client
 python src/c1.py &

@@ -21,8 +21,12 @@ jobs:
         run: |
           bash scripts/install_pkgs.sh
 
-      - name: Run
+      - name: Run1
         run: |
-          bash scripts/test.sh
+          bash scripts/test_1.sh
+
+      - name: Check k3s
+        run: |
+          sudo k3s kubectl get all -A
 
 
