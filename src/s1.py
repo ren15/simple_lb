@@ -2,6 +2,7 @@ import socket
 from _thread import start_new_thread
 import sys
 import logging
+import time
 
 
 def getLogger(name):
@@ -22,23 +23,45 @@ logger = getLogger(__name__)
 g_num = 0
 
 
+class QpsReporter:
+    def __init__(self, period):
+        self.t_last = time.time()
+        self.g_last = 0
+        self.period = period
+
+    def update(self, var):
+        if var % self.period == 0:
+            t_this = time.time()
+            t_diff = t_this - self.t_last
+            self.t_last = t_this
+
+            g_diff = var - self.g_last
+            self.g_last = var
+
+            qps = g_diff / t_diff
+            logger.info(f'QPS : {qps}')
+            sys.stdout.flush()
+
+
 def multi_threaded_client(connection):
     connection.send(str.encode('Server is working:'))
+
+    qps_reporter = QpsReporter(100)
+
     while True:
         data = connection.recv(2048).decode()
         if not data:
             break
+
         global g_num
         g_num += 1
 
-        logger.info(f"g_num : {g_num}")
-        sys.stdout.flush()
+        # logger.info(f"g_num : {g_num}")
+        qps_reporter.update(g_num)
 
         response = 'Server message: ' + str(int(data)+1)
         connection.sendall(str.encode(response))
 
-        if g_num > 100:
-            break
     connection.close()
 
 
@@ -59,8 +82,7 @@ def start_server_socket(host, port, max_clients):
         start_new_thread(multi_threaded_client, (Client, ))
         ThreadCount += 1
         logger.info('Thread Number: ' + str(ThreadCount))
-        if g_num > 100:
-            break
+
     ServerSideSocket.close()
     logger.info('Server Closed')
 
