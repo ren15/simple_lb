@@ -34,5 +34,5 @@ def start_client_socket(host, port, sleep_time: float):
 
 if __name__ == '__main__':
     start_client_socket(
-        host='127.0.0.1', port=2004, sleep_time=0.01
+        host='127.0.0.1', port=12004, sleep_time=0.01
     )
