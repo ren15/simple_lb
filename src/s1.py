@@ -70,22 +70,17 @@ def multi_threaded_client(connection):
         connection.sendall(str.encode(response))
 
     connection.close()
-    logger.info("connection closed")
 
 
 def start_server_socket(host, port, max_clients):
     ServerSideSocket = socket.socket()
-    ServerSideSocket.settimeout(1)
 
     ThreadCount = 0
-
     try:
         ServerSideSocket.bind((host, port))
     except socket.error as e:
         print(str(e))
-        logger.error("socket bind error")
-        return
-
+    print(f'Socket is listening at {host}:{port}')
     ServerSideSocket.listen(max_clients)
 
     QpsReporter.create_thread(1)
@@ -102,11 +97,5 @@ def start_server_socket(host, port, max_clients):
 
 
 if __name__ == '__main__':
-    logger = getLogger(__name__)
-    g_num = 0
-
-    t1 = time.time()
 
     start_server_socket(host='127.0.0.1', port=2004, max_clients=100)
-
-    print(f"start_server_socket cost {time.time()-t1}")
