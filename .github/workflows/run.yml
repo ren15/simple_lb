@@ -21,12 +21,25 @@ jobs:
         run: |
           bash scripts/install_pkgs.sh
 
-      - name: Run1
+      - name: Run
         run: |
           bash scripts/test_1.sh
+          pkill -9 python
+          ls -elf | grep python
 
       - name: Check k3s
         run: |
           sudo k3s kubectl get all -A
+
+      - name: Run in container
+        run: |
+          make docker_build
+          make docker_run_server &
+          sleep 5
+          make docker_run_client & 
+          sleep 5
+
+
+
 
 

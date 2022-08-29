@@ -98,4 +98,5 @@ def start_server_socket(host, port, max_clients):
 
 if __name__ == '__main__':
 
-    start_server_socket(host='127.0.0.1', port=2004, max_clients=100)
+    start_server_socket(host='0.0.0.0', port=2004, max_clients=100)
+    
