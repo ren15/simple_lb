@@ -24,29 +24,37 @@ g_num = 0
 
 
 class QpsReporter:
-    def __init__(self, period):
+    def __init__(self):
         self.t_last = time.time()
         self.g_last = 0
-        self.period = period
+
+    @staticmethod
+    def create_thread(period: float):
+        def qps_reporter_thread():
+            qps_reporter = QpsReporter()
+            while True:
+                qps_reporter.update(g_num)
+                time.sleep(period)
+
+        start_new_thread(qps_reporter_thread, ())
 
     def update(self, var):
-        if var % self.period == 0:
-            t_this = time.time()
-            t_diff = t_this - self.t_last
-            self.t_last = t_this
+        # if var % self.period == 0:
 
-            g_diff = var - self.g_last
-            self.g_last = var
+        t_this = time.time()
+        t_diff = t_this - self.t_last
+        self.t_last = t_this
 
-            qps = g_diff / t_diff
-            logger.info(f'QPS : {qps}')
-            sys.stdout.flush()
+        g_diff = var - self.g_last
+        self.g_last = var
+
+        qps = g_diff / t_diff
+        logger.info(f'QPS : {qps}')
+        sys.stdout.flush()
 
 
 def multi_threaded_client(connection):
     connection.send(str.encode('Server is working:'))
-
-    qps_reporter = QpsReporter(100)
 
     while True:
         data = connection.recv(2048).decode()
@@ -57,7 +65,6 @@ def multi_threaded_client(connection):
         g_num += 1
 
         # logger.info(f"g_num : {g_num}")
-        qps_reporter.update(g_num)
 
         response = 'Server message: ' + str(int(data)+1)
         connection.sendall(str.encode(response))
@@ -75,6 +82,8 @@ def start_server_socket(host, port, max_clients):
         print(str(e))
     print(f'Socket is listening at {host}:{port}')
     ServerSideSocket.listen(max_clients)
+
+    QpsReporter.create_thread(1)
 
     while True:
         Client, address = ServerSideSocket.accept()

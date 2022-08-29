@@ -17,5 +17,16 @@ sleep 5
 python src/c1.py &
 sleep 5
 
+# Start client3, qps should increase
 python src/c1.py &
 sleep 5
+
+
+# Start client4..10, qps should increase
+for i in {4..10}
+do
+    python src/c1.py &
+done
+
+sleep 5
+
