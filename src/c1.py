@@ -5,7 +5,7 @@ import time
 logger = getLogger(__name__)
 
 
-def start_client_socket(host, port):
+def start_client_socket(host, port, sleep_time: float):
 
     ClientMultiSocket = socket.socket()
     logger.info('Waiting for connection response')
@@ -15,6 +15,7 @@ def start_client_socket(host, port):
         logger.error(str(e))
 
     _res = ClientMultiSocket.recv(1024)
+
     i = 0
     while True:
         i += 1
@@ -25,11 +26,13 @@ def start_client_socket(host, port):
         except:
             logger.info("Client connection failed, break from loop")
             break
-        time.sleep(0.1)
+        time.sleep(sleep_time)
 
     ClientMultiSocket.close()
     logger.info("ClientSucceeded")
 
 
 if __name__ == '__main__':
-    start_client_socket(host='127.0.0.1', port=2004)
+    start_client_socket(
+        host='127.0.0.1', port=2004, sleep_time=0.01
+    )
